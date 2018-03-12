@@ -25,7 +25,7 @@ Initialize it and use it within your events chain. Note that at least 4 events a
 
 * `NOTEON`, `NOTEOFF`, `SYSRT_CLOCK` and `SYSRT_START`
 
-Initialize the arpeggiator arguments and run it (see `synth-studio.py` for a more complex setup example):
+Initialize the arpeggiator arguments and run it:
 
 ```
 arpArgs = {
@@ -37,9 +37,15 @@ arpArgs = {
     'direction': arp.DIRECTION_UP,
     'randomVelocity': True
 }
-
-run(Call(arpeggiator().setup, **arpArgs))
 ```
+
+Then, use Mididings' _Call_ method inside the events chain like this:
+
+```
+Call(arpeggiator().setup, **arpArgs)
+```
+
+See [this example](synth-studio.py) for a real world scenario.
 
 ## Options
 
