@@ -55,7 +55,7 @@ run(Call(arpeggiator().setup, **arpArgs))
 
 I tried to make it as much easy and comprehensible as possible but any suggestions are welcome.
 
-* `+3.+0.+5.-2.`: this pattern has 8 steps; the `.` means _silence_, so, no note will be played at that step. A number is the note interval that will be applied to the incoming note, so `+3` means that a *C3* (MIDI 60) will output a *D#3* (MIDI 63) at that step. For example, to increase by one octave, you can do `+12`.
+* `+3.+0.+5.-2.`: this pattern has 8 steps; the `.` means _silence_, so, no note will be played at that step. A number is the note interval that will be applied to the incoming note, so `+3` means that a *C3* (MIDI 60) will output a *D#3* (MIDI 63) at that step. For example, to increase by one octave, you can do `+12`. See [this chart](http://computermusicresource.com/midikeys.html) for details.
 
 You can write any complex patterns and combine it with the *direction* option for generating fun and interesting melodies thus adding different output ports and channels, many musical compositions can be generated with just a few keyboard notes.
 
