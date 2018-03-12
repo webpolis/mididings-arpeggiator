@@ -4,7 +4,7 @@ An awesome customizable arpeggiator to be used with Mididings along with any com
 
 ## Getting Started
 
-As I'm not yet a Senior Python developer, this project may require better optimization. But, it currently does it job pretty well as you 
+As I'm not yet a Senior Python developer, this project may require better optimization. But, it currently does its job pretty well as you 
 can certainly use as many arpeggiator instances you need, using different MIDI ports and channels as outputs, hence composing a full orchestation and interesting melodies with ease!
 
 Feel free to contribute and submit pull requests if you have new ideas in mind.
