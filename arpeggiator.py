@@ -82,6 +82,7 @@ class arpeggiator:
         if event.type == SYSRT_START or event.type == SYSCM_SONGPOS:
             self.__ticks = 0
             self.__firstTickTime = datetime.now()
+            self.__notes = {}
 
         if event.type == SYSEX or event.type == SYSCM_SONGPOS or event.type == SYSCM_QFRAME or event.type == SYSRT_SENSING:
             print(str(event.type))
