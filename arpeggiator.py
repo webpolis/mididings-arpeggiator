@@ -3,7 +3,7 @@ from mididings.event import *
 from mididings.engine import output_event
 from datetime import datetime
 from math import floor, ceil
-from random import randrange
+from random import randrange, shuffle
 import time
 import re
 
@@ -21,21 +21,23 @@ class arpeggiator:
         self.__firstTickTime = None
         self.__lastTickTime = None
         self.__isLatched = False
-        self.__outputPort = None
-        self.__outputChannel = None
-        self.__incomingEvent = None
-        self.__noteResolution = 2
-        self.__notePattern = None
+        self.__outPort = None
+        self.__outChannel = None
+        self.__event = None
+        self.__resolution = 2
+        self.__pattern = None
         self.__randomVelocity = False
+        self.__direction = None
         self.__notes = {}
 
     def setup(self, event, outPort, outChannel, latch=False, resolution=2, pattern='+3.+0.+5.-2.', direction=DIRECTION_UP, randomVelocity=False):
-        self.__incomingEvent = event
-        self.__outputPort = outPort
-        self.__outputChannel = outChannel
+        self.__event = event
+        self.__outPort = outPort
+        self.__outChannel = outChannel
         self.__isLatched = latch
-        self.__noteResolution = resolution
-        self.__notePattern = pattern
+        self.__resolution = resolution
+        self.__pattern = pattern
+        self.__direction = direction
         self.__randomVelocity = randomVelocity
 
         microSecs = 0
@@ -112,38 +114,50 @@ class arpeggiator:
 
         return note
 
-    def __applyPatternDirection(self, pattern):
+    def __applyPatternDirection(self):
+        pattern = filter(bool, re.split(r'([\+\-]?\d+|\.)', self.__pattern))
+
+        if self.__direction == self.DIRECTION_DOWN:
+            pattern = list(reversed(pattern))
+        elif self.__direction == self.DIRECTION_UPDOWN:
+            pattern = pattern + list(reversed(pattern))
+        elif self.__direction == self.DIRECTION_RANDOM:
+            shuffle(pattern)
 
         return pattern
 
-    def __arpeggiate(self):
-        pattern = filter(bool, re.split(
-            r'([\+\-]?\d+|\.)', self.__notePattern))
-        pattern = self.__applyPatternDirection(pattern)
-
+    def __setPatternNotesOff(self):
+        pattern = self.__applyPatternDirection()
         activeNotes = self.__getActiveNotes()
 
         for note, value in activeNotes.iteritems():
-            if self.__ticks % floor(self.__tickFactor/self.__noteResolution) == 0:
+            if pattern[value['patternStep']] != '.':
+                offNote = self.__generatePatternNote(
+                    note, pattern[value['patternStep']])
+                output_event(NoteOffEvent(self.__outPort, self.__outChannel,
+                                          offNote))
+
+        return
+
+    def __arpeggiate(self):
+        pattern = self.__applyPatternDirection()
+        activeNotes = self.__getActiveNotes()
+
+        for note, value in activeNotes.iteritems():
+            if self.__ticks % floor(self.__tickFactor/self.__resolution) == 0:
                 print 'tick %i pattern step %s' % (
                     self.__ticks, pattern[value['patternStep']])
 
                 if pattern[value['patternStep']] != '.':
-                    output_event(NoteOnEvent(self.__outputPort, self.__outputChannel,
+                    output_event(NoteOnEvent(self.__outPort, self.__outChannel,
                                              self.__generatePatternNote(
                                                  note, pattern[value['patternStep']]),
                                              randrange(70, 127) if self.__randomVelocity else value['velocity']))
 
                 if value['patternStep'] + 1 >= len(pattern):
                     self.__notes[note]['patternStep'] = 0
+                    self.__setPatternNotesOff()
                 else:
                     self.__notes[note]['patternStep'] += 1
-
-                # # note patterns go off... take care of duration :), probably best setting OFF
-                # if pattern[value['patternStep'] - 1] != '.':
-                #     offNote = __generatePatternNote(
-                #         note, pattern[value['patternStep'] - 1])
-                #     output_event(NoteOffEvent(outputPort, outputChannel,
-                #                               offNote))
 
         return
