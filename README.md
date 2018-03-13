@@ -45,7 +45,7 @@ arpArgs = {
 Then, use Mididings' _Call_ method inside the events chain like this:
 
 ```
-Call(arpeggiator().setup, **arpArgs)
+PortFilter('my-midi-keyboard') >> Call(arpeggiator().setup, **arpArgs)
 ```
 
 See [this example](synth-studio.py) for a real world scenario.
