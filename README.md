@@ -37,7 +37,7 @@ arpArgs = {
     'resolution': 2,
     'latch': False,
     'pattern': '+3.+2...+5.-2..+12',
-    'direction': arp.DIRECTION_UP,
+    'direction': arpeggiator.DIRECTION_UP,
     'randomVelocity': True
 }
 ```
