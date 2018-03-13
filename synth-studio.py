@@ -33,20 +33,33 @@ config(
 
 preScene = Sanitize()  # >> Filter(NOTE | SYSRT | PROGRAM | SYSCM | SYSEX)
 
-arpArgs = {
+arp1Args = {
     'outPort': 'out3-ms-2',
     'outChannel': 2,
     'inChannel': 2,
     'resolution': 4,
-    'latch': False,
+    'latch': True,
     'pattern': '+3.+2...+5.-2..+12+15.',
+    'direction': arp.DIRECTION_RANDOM,
+    'randomVelocity': True
+}
+
+
+arp2Args = {
+    'outPort': 'out2-vk-1',
+    'outChannel': 1,
+    'inChannel': 1,
+    'resolution': 2,
+    'latch': True,
+    'pattern': '+12.+7.-5.',
     'direction': arp.DIRECTION_RANDOM,
     'randomVelocity': True
 }
 
 song1_scene1 = [
     PortFilter('in1') >> [
-        Call(arp().setup, **arpArgs),
+        Call(arp().setup, **arp1Args),
+        Call(arp().setup, **arp2Args),
         [
             ChannelFilter(1) >> Output('out3-ms-1', 1),
             ChannelFilter(2) >> Output('out3-ms-2', 2) >> Print('ms-2'),
