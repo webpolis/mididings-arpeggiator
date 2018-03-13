@@ -25,6 +25,8 @@ Initialize it and use it within your events chain. Note that at least 4 events a
 
 * `NOTEON`, `NOTEOFF`, `SYSRT_CLOCK` and `SYSRT_START`
 
+Also, it is important to know that you shouldn't apply a _ChannelFilter_ before the _Call_ to the arpeggiator, since you may have your hardware's MIDI clock to be sending messages thru a different channel, hence, the arpeggiator won't work. Avoid using _ChannelFilter_ within the arpeggiator's events chain.
+
 Initialize the arpeggiator arguments and run it:
 
 ```
