@@ -31,6 +31,7 @@ Initialize the arpeggiator arguments and run it:
 arpArgs = {
     'outPort': 'my-midi-hardware-synth',
     'outChannel': 2,
+    'inChannel': 2,
     'resolution': 2,
     'latch': False,
     'pattern': '+3.+2...+5.-2..+12',
@@ -51,6 +52,7 @@ See [this example](synth-studio.py) for a real world scenario.
 
 * `outPort`: the output port (e.g. an external MIDI device)
 * `outChannel`: the output channel
+* `inChannel`: the channel that will be listened for incoming notes
 * `resolution`: how many pattern steps will be played on each beat
 * `latch`: If _True_, the pattern will keep playing even if you release the note key
 * `pattern`: the arpeggio pattern (see [patterns](#patterns))

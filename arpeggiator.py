@@ -23,6 +23,7 @@ class arpeggiator:
         self.__isLatched = False
         self.__outPort = None
         self.__outChannel = None
+        self.__inChannel = None
         self.__event = None
         self.__resolution = 2
         self.__pattern = None
@@ -30,10 +31,11 @@ class arpeggiator:
         self.__direction = None
         self.__notes = {}
 
-    def setup(self, event, outPort, outChannel, latch=False, resolution=2, pattern='+3.+0.+5.-2.', direction=DIRECTION_UP, randomVelocity=False):
+    def setup(self, event, outPort, outChannel, inChannel, latch=False, resolution=2, pattern='+3.+0.+5.-2.', direction=DIRECTION_UP, randomVelocity=False):
         self.__event = event
         self.__outPort = outPort
         self.__outChannel = outChannel
+        self.__inChannel = inChannel
         self.__isLatched = latch
         self.__resolution = resolution
         self.__pattern = pattern
@@ -43,6 +45,9 @@ class arpeggiator:
         microSecs = 0
 
         if event.type == NOTEON:
+            if event.channel and event.channel != self.__inChannel:
+                return
+
             self.__notes[event.data1] = {
                 'last': True,
                 'active': True,
@@ -53,6 +58,9 @@ class arpeggiator:
             self.__setLastStatus(event.data1)
 
         if event.type == NOTEOFF:
+            if event.channel and event.channel != self.__inChannel:
+                return
+
             self.__notes[event.data1]['active'] = self.__isLatched or False
             self.__notes[event.data1]['patternStep'] = 0
 

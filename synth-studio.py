@@ -36,6 +36,7 @@ preScene = Sanitize()  # >> Filter(NOTE | SYSRT | PROGRAM | SYSCM | SYSEX)
 arpArgs = {
     'outPort': 'out3-ms-2',
     'outChannel': 2,
+    'inChannel': 2,
     'resolution': 4,
     'latch': False,
     'pattern': '+3.+2...+5.-2..+12+15.',
