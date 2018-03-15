@@ -1,6 +1,7 @@
 from mididings import *
 from mididings.event import *
 from mididings.engine import output_event
+from mididings.extra import Panic
 from datetime import datetime
 from math import floor, ceil
 from random import randrange, shuffle
@@ -82,7 +83,9 @@ class arpeggiator:
         if event.type == SYSRT_START or event.type == SYSCM_SONGPOS:
             self.__ticks = 0
             self.__firstTickTime = datetime.now()
+            self.__setPatternNotesOff()
             self.__notes = {}
+            Panic()
 
         if event.type == SYSEX or event.type == SYSCM_SONGPOS or event.type == SYSCM_QFRAME or event.type == SYSRT_SENSING:
             print(str(event.type))
