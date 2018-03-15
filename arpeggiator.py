@@ -49,12 +49,21 @@ class arpeggiator:
             if event.channel and event.channel != self.__inChannel:
                 return
 
-            self.__notes[event.data1] = {
-                'last': True,
-                'active': True,
-                'patternStep': 0,
-                'velocity': event.velocity
-            }
+            if event.data1 in self.__notes:
+                self.__setPatternNotesOff(event.data1)
+                self.__notes.pop(event.data1, None)
+                # self.__notes[event.data1]['active'] = False
+                # self.__notes[event.data1]['mute'] = True
+
+                print 'port %s channel %i muting note %i' % (
+                    self.__outPort, self.__outChannel, event.data1)
+            else:
+                self.__notes[event.data1] = {
+                    'last': True,
+                    'active': True,
+                    'patternStep': 0,
+                    'velocity': event.velocity
+                }
 
             self.__setLastStatus(event.data1)
 
@@ -62,10 +71,11 @@ class arpeggiator:
             if event.channel and event.channel != self.__inChannel:
                 return
 
-            self.__notes[event.data1]['active'] = self.__isLatched or False
-            self.__notes[event.data1]['patternStep'] = 0
+            if event.data1 in self.__notes:
+                self.__notes[event.data1]['active'] = self.__isLatched or False
+                self.__notes[event.data1]['patternStep'] = 0
 
-            self.__setLastStatus(event.data1)
+                self.__setLastStatus(event.data1)
 
         if event.type == SYSRT_CLOCK:
             # tempo = ticks per sec * 2.5
@@ -138,18 +148,31 @@ class arpeggiator:
 
         return pattern
 
-    def __setPatternNotesOff(self):
+    def __setPatternNotesOff(self, note=None):
         pattern = self.__applyPatternDirection()
         activeNotes = self.__getActiveNotes()
 
-        for note, value in activeNotes.iteritems():
-            if pattern[value['patternStep']] != '.':
-                offNote = self.__generatePatternNote(
-                    note, pattern[value['patternStep']])
-                print 'port %s channel %i setting note %i off' % (
-                    self.__outPort, self.__outChannel, offNote)
-                output_event(NoteOffEvent(self.__outPort, self.__outChannel,
-                                          offNote))
+        if note is None:
+            for _note, value in activeNotes.iteritems():
+                if pattern[value['patternStep']] != '.':
+                    offNote = self.__generatePatternNote(
+                        _note, pattern[value['patternStep']])
+
+                    print 'port %s channel %i setting note %i off' % (
+                        self.__outPort, self.__outChannel, offNote)
+
+                    output_event(NoteOffEvent(self.__outPort, self.__outChannel,
+                                              offNote))
+        else:
+            for step in pattern:
+                if step != '.':
+                    offNote = self.__generatePatternNote(note, step)
+
+                    print 'port %s channel %i setting note %i off' % (
+                        self.__outPort, self.__outChannel, offNote)
+
+                    output_event(NoteOffEvent(self.__outPort, self.__outChannel,
+                                              offNote))
 
         return
 
