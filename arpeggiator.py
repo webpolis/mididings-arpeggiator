@@ -151,15 +151,13 @@ class arpeggiator:
     def __setPatternNotesOff(self, note=None):
         pattern = self.__applyPatternDirection()
         activeNotes = self.__getActiveNotes()
+        offNote = None
 
         if note is None:
             for _note, value in activeNotes.iteritems():
                 if pattern[value['patternStep']] != '.':
                     offNote = self.__generatePatternNote(
                         _note, pattern[value['patternStep']])
-
-                    print 'port %s channel %i setting note %i off' % (
-                        self.__outPort, self.__outChannel, offNote)
 
                     output_event(NoteOffEvent(self.__outPort, self.__outChannel,
                                               offNote))
@@ -168,11 +166,12 @@ class arpeggiator:
                 if step != '.':
                     offNote = self.__generatePatternNote(note, step)
 
-                    print 'port %s channel %i setting note %i off' % (
-                        self.__outPort, self.__outChannel, offNote)
-
                     output_event(NoteOffEvent(self.__outPort, self.__outChannel,
                                               offNote))
+
+        if isinstance(offNote, int):
+            print 'port %s channel %i setting note %i off' % (
+                self.__outPort, self.__outChannel, offNote)
 
         return
 
