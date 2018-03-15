@@ -3,10 +3,11 @@ from mididings.event import *
 from mididings.extra import *
 from mididings.extra.inotify import AutoRestart
 from mididings.extra.gm import *
+from math import floor, ceil
 from arpeggiator import arpeggiator as arp
 
 hook(
-    AutoRestart()
+    AutoRestart(filenames=['arpeggiator.py'])
 )
 
 config(
@@ -37,7 +38,7 @@ arp1Args = {
     'outPort': 'out3-ms-2',
     'outChannel': 2,
     'inChannel': 2,
-    'resolution': 4,
+    'resolution': 3,
     'latch': True,
     'pattern': '+3.+2...+5.-2..+12+15.',
     'direction': arp.DIRECTION_RANDOM,
@@ -87,18 +88,18 @@ song1 = SceneGroup('song1', [
             Program('out3-ms', 10, 45),
         ],
         [
-            Ctrl(ctrl=5, value=24) >> Output(
+            Ctrl(ctrl=5, value=int(ceil(127/4))) >> Output(
                 'out2-vk-1', 1) >> Print('vk portamento'),
-            Ctrl(ctrl=42, value=8) >> Output(
+            Ctrl(ctrl=42, value=0) >> Output(
                 'out2-vk-1', 1) >> Print('vk detune'),
-            Ctrl(ctrl=43, value=24) >> Output(
+            Ctrl(ctrl=43, value=int(ceil(127/2))) >> Output(
                 'out2-vk-1', 1) >> Print('vk vco eg int'),
-            Ctrl(ctrl=44, value=55) >> Output(
-                'out2-vk-1', 1) >> Print('vk cutoff'),
-            Ctrl(ctrl=45, value=45) >> Output(
+            Ctrl(ctrl=44, value=0) >> Output(
+                'out2-vk-1', 1) >> Print('vk vcf cutoff'),
+            Ctrl(ctrl=45, value=127) >> Output(
                 'out2-vk-1', 1) >> Print('vk vcf eg int'),
-            Ctrl(ctrl=48, value=60) >> Output(
-                'out2-vk-1', 1) >> Print('vk cutoff int'),
+            Ctrl(ctrl=48, value=127) >> Output(
+                'out2-vk-1', 1) >> Print('vk lfo cutoff int'),
             Ctrl(ctrl=50, value=72) >> Output(
                 'out2-vk-1', 1) >> Print('vk decay/release'),
             Ctrl(ctrl=51, value=102) >> Output(
