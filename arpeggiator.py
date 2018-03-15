@@ -143,6 +143,8 @@ class arpeggiator:
             if pattern[value['patternStep']] != '.':
                 offNote = self.__generatePatternNote(
                     note, pattern[value['patternStep']])
+                print 'port %s channel %i setting note %i off' % (
+                    self.__outPort, self.__outChannel, offNote)
                 output_event(NoteOffEvent(self.__outPort, self.__outChannel,
                                           offNote))
 
@@ -154,13 +156,15 @@ class arpeggiator:
 
         for note, value in activeNotes.iteritems():
             if self.__ticks % floor(self.__tickFactor/self.__resolution) == 0:
-                print 'tick %i pattern step %s' % (
-                    self.__ticks, pattern[value['patternStep']])
+                newNote = self.__generatePatternNote(
+                    note, pattern[value['patternStep']]) if pattern[value['patternStep']] != '.' else 'is silence'
 
-                if pattern[value['patternStep']] != '.':
+                if isinstance(newNote, int):
+                    print 'port %s channel %i tick %i pattern step %s new note %s' % (
+                        self.__outPort, self.__outChannel, self.__ticks, pattern[value['patternStep']], str(newNote))
+
                     output_event(NoteOnEvent(self.__outPort, self.__outChannel,
-                                             self.__generatePatternNote(
-                                                 note, pattern[value['patternStep']]),
+                                             newNote,
                                              randrange(70, 127) if self.__randomVelocity else value['velocity']))
 
                 if value['patternStep'] + 1 >= len(pattern):
