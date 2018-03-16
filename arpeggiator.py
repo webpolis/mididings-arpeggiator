@@ -72,6 +72,9 @@ class arpeggiator:
                 return
 
             if event.data1 in self.__notes:
+                if not self.__isLatched:
+                    self.__setPatternNotesOff(event.data1)
+
                 self.__notes[event.data1]['active'] = self.__isLatched or False
                 self.__notes[event.data1]['patternStep'] = 0
 
