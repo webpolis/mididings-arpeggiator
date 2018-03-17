@@ -74,11 +74,12 @@ class arpeggiator:
             if event.data1 in self.__notes:
                 if not self.__isLatched:
                     self.__setPatternNotesOff(event.data1)
+                    self.__notes.pop(event.data1, None)
+                else:
+                    self.__notes[event.data1]['active'] = self.__isLatched or False
+                    self.__notes[event.data1]['patternStep'] = 0
 
-                self.__notes[event.data1]['active'] = self.__isLatched or False
-                self.__notes[event.data1]['patternStep'] = 0
-
-                self.__setLastStatus(event.data1)
+                    self.__setLastStatus(event.data1)
 
         if event.type == SYSRT_CLOCK:
             # tempo = ticks per sec * 2.5
