@@ -18,7 +18,7 @@ config(
     ],
     out_ports=[
         ('out1-mb-1', 'MicroBrute:.*'),
-        ('out2-vk-1', 'Midilink:.*'),
+        ('out2-vk-1', 'CH345:.*'),
         ('out3-ms', 'microSTATION:.*'),
         ('out3-ms-1', 'microSTATION:.*'),
         ('out3-ms-2', 'microSTATION:.*'),
@@ -38,9 +38,9 @@ arp1Args = {
     'outPort': 'out3-ms-2',
     'outChannel': 2,
     'inChannel': 2,
-    'resolution': 3,
-    'latch': True,
-    'pattern': '+3.+2...+5.-2..+12+15.',
+    'resolution': 4,
+    'latch': False,
+    'pattern': '+12.+7.-5.',
     'direction': arp.DIRECTION_RANDOM,
     'randomVelocity': True
 }
@@ -51,8 +51,8 @@ arp2Args = {
     'outChannel': 1,
     'inChannel': 1,
     'resolution': 2,
-    'latch': True,
-    'pattern': '+12.+7.-5.',
+    'latch': False,
+    'pattern': '+3+5+7.',
     'direction': arp.DIRECTION_RANDOM,
     'randomVelocity': True
 }
@@ -62,12 +62,8 @@ song1_scene1 = [
         Call(arp().setup, **arp1Args),
         Call(arp().setup, **arp2Args),
         [
-            ChannelFilter(1) >> Output('out3-ms-1', 1),
-            ChannelFilter(2) >> Output('out3-ms-2', 2) >> Print('ms-2'),
             ChannelFilter(1) >> KeyFilter(':d#2') >> Transpose(
                 12) >> Port('out1-mb-1') >> Print('mb'),
-            ChannelFilter(1) >> KeyFilter('c3:c5') >> Transpose(-12) >> Port(
-                'out2-vk-1') >> Print('vk'),
         ],
         [
             Filter(SYSRT_CLOCK) >> Port('out2-vk-1'),
@@ -77,7 +73,7 @@ song1_scene1 = [
             Filter(SYSRT_START) >> Port('out2-vk-1') >> Print('start'),
             Filter(SYSRT_STOP) >> Port('out2-vk-1') >> Print('stop')
         ]
-    ],
+    ]
 ]
 
 song1 = SceneGroup('song1', [
@@ -98,15 +94,19 @@ song1 = SceneGroup('song1', [
                 'out2-vk-1', 1) >> Print('vk vcf cutoff'),
             Ctrl(ctrl=45, value=127) >> Output(
                 'out2-vk-1', 1) >> Print('vk vcf eg int'),
+            Ctrl(ctrl=46, value=0) >> Output(
+                'out2-vk-1', 1) >> Print('vk lfo rate'),
+            Ctrl(ctrl=47, value=0) >> Output(
+                'out2-vk-1', 1) >> Print('vk lfo pitch'),
             Ctrl(ctrl=48, value=127) >> Output(
                 'out2-vk-1', 1) >> Print('vk lfo cutoff int'),
             Ctrl(ctrl=50, value=72) >> Output(
                 'out2-vk-1', 1) >> Print('vk decay/release'),
             Ctrl(ctrl=51, value=102) >> Output(
                 'out2-vk-1', 1) >> Print('vk sustain'),
-            Ctrl(ctrl=52, value=108) >> Output(
+            Ctrl(ctrl=52, value=0) >> Output(
                 'out2-vk-1', 1) >> Print('vk delay time'),
-            Ctrl(ctrl=53, value=96) >> Output(
+            Ctrl(ctrl=53, value=int(ceil(127*.25))) >> Output(
                 'out2-vk-1', 1) >> Print('vk feedback'),
         ],
         [
