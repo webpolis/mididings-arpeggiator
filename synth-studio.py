@@ -92,7 +92,7 @@ song1 = SceneGroup('song1', [
                 'out2-vk-1', 1) >> Print('vk vco eg int'),
             Ctrl(ctrl=44, value=0) >> Output(
                 'out2-vk-1', 1) >> Print('vk vcf cutoff'),
-            Ctrl(ctrl=45, value=127) >> Output(
+            Ctrl(ctrl=45, value=int(ceil(127/2))) >> Output(
                 'out2-vk-1', 1) >> Print('vk vcf eg int'),
             Ctrl(ctrl=46, value=0) >> Output(
                 'out2-vk-1', 1) >> Print('vk lfo rate'),
@@ -104,9 +104,9 @@ song1 = SceneGroup('song1', [
                 'out2-vk-1', 1) >> Print('vk decay/release'),
             Ctrl(ctrl=51, value=102) >> Output(
                 'out2-vk-1', 1) >> Print('vk sustain'),
-            Ctrl(ctrl=52, value=0) >> Output(
+            Ctrl(ctrl=52, value=int(ceil(127*.60))) >> Output(
                 'out2-vk-1', 1) >> Print('vk delay time'),
-            Ctrl(ctrl=53, value=int(ceil(127*.25))) >> Output(
+            Ctrl(ctrl=53, value=int(ceil(127*.75))) >> Output(
                 'out2-vk-1', 1) >> Print('vk feedback'),
         ],
         [
