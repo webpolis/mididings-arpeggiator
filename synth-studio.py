@@ -53,7 +53,7 @@ arp2Args = {
     'resolution': 2,
     'latch': False,
     'pattern': '+3+5+7.',
-    'direction': arp.DIRECTION_RANDOM,
+    'direction': arp.DIRECTION_UPDOWN,
     'randomVelocity': True
 }
 
