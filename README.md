@@ -11,7 +11,7 @@ Feel free to contribute and submit pull requests if you have new ideas in mind.
 
 ### Prerequisites
 
-You need Mididings, but you can probably change this a bit and use it with other MIDI Python libraries as well.
+You need latest [Mididings](https://github.com/dsacre/mididings) version, but you can probably change this a bit and use it with other MIDI Python libraries as well.
 
 ### Usage
 
