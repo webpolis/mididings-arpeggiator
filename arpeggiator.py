@@ -18,7 +18,7 @@ class arpeggiator:
 
     def __init__(self):
         self.__ticks = 0
-        self.__tickFactor = 25  # ticks per beat
+        self.__tickFactor = 24  # ticks per beat
         self.__firstTickTime = None
         self.__lastTickTime = None
         self.__isLatched = False
